@@ -3,6 +3,8 @@ package com.example.arturmusayelyan.notifications;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +13,9 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.View;
+import android.widget.RemoteViews;
 
 import static android.graphics.Color.rgb;
 
@@ -19,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static int FIRST_NOTIF = 1;
     private final static int SECOND_NOTIF = 2;
     private final static int THIRD_NOTIF = 3;
+    private final static String GROUP_KEY = "groupKey";
 
     String g = "G";
 
@@ -113,6 +118,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(SECOND_NOTIF, notification);
         notificationManager.notify(THIRD_NOTIF, notification);
+        notificationManager.notify(4, notification);
+        notificationManager.notify(5, notification);
+        notificationManager.notify(6, notification);
     }
 
     private void cancelNotification() {
@@ -175,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notificationManager.notify(FIRST_NOTIF, notification);
     }
 
+
     private void createNotificationInboxStyle() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.pets);
@@ -210,19 +219,99 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void createNotificationWithActionButtons() {
-        Intent intent=new Intent(this,SecondActivity.class);
+        //clicke chi ashxatum
+        Intent intent = new Intent(this, SecondActivity.class);
         intent.setAction("com.example.arturmusayelyan.notifications.mainactivity.g");
-        PendingIntent pendingIntent=PendingIntent.getService(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.pets);
         builder.setContentTitle("Title");
         builder.setContentText("Notification text");
-        builder.addAction(android.R.drawable.btn_plus,"Next activity",pendingIntent);
+        builder.addAction(android.R.drawable.btn_plus, "Next activity", pendingIntent);
 
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(FIRST_NOTIF, notification);
+    }
+
+    private void createCustomViewNotification() {
+        Intent intent = new Intent(this, SecondActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification);
+        remoteViews.setTextViewText(R.id.text_view, "Custom Notification text");
+        remoteViews.setOnClickPendingIntent(R.id.liner_notification_layout, pendingIntent);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.pets);
+        builder.setContent(remoteViews);
+
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(FIRST_NOTIF, notification);
+    }
+
+    private void createCustomExtendedViewNotification() {
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notifications3);
+        remoteViews.setTextViewText(R.id.simple_text_view, "Custom notification text");
+
+        RemoteViews remoteViewsExtended = new RemoteViews(getPackageName(), R.layout.notification3_extended);
+        remoteViewsExtended.setTextViewText(R.id.extended_text_view, "Extended custom notification text");
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.pets);
+        builder.setCustomContentView(remoteViews);
+        builder.setCustomBigContentView(remoteViewsExtended);
+        builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
+
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(FIRST_NOTIF, notification);
+    }
+
+    private void createCustomViewNotificationsWithActiveButtons() {
+        Intent intent = new Intent(this, SecondActivity.class);
+        PendingIntent secondActivity = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        Intent intent2 = new Intent(this, MyClass.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notifications2);
+        remoteViews.setTextViewText(R.id.text_view2, "Custom Notification text");
+        remoteViews.setOnClickPendingIntent(R.id.second_activity_button, secondActivity);
+        remoteViews.setOnClickPendingIntent(R.id.delete_button, pendingIntent);
+
+        builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.pets);
+        builder.setContent(remoteViews);
+
+        notification = builder.build();
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(FIRST_NOTIF, notification);
+    }
+
+    private void createGroupOfNotifications() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.pets);
+        builder.setContentTitle("Title");
+        builder.setContentText("Notification text");
+
+        builder.setContentInfo("user_mail.com");
+        builder.setGroup(GROUP_KEY);
+        builder.setGroupSummary(true);
+
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(56, notification);
+        notificationManager.notify(57,notification);
+        notificationManager.notify(58,notification);
+        notificationManager.notify(59,notification);
+        notificationManager.notify(60,notification);
+        notificationManager.notify(61,notification);
+        notificationManager.notify(62,notification);
+        notificationManager.notify(63,notification);
     }
 
     @Override
@@ -237,7 +326,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //createNotificationIncreasePictureSize();
                 //createNotificationInboxStyle();
                 //createNotificationMessagingStyle();
-                createNotificationWithActionButtons();
+                // createNotificationWithActionButtons();
+                // createCustomViewNotification();
+                //createCustomViewNotificationsWithActiveButtons();
+                //createCustomExtendedViewNotification();
+                createGroupOfNotifications();
                 break;
             case R.id.update_notif_button:
                 updateNotification();
@@ -246,6 +339,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //cancelNotification();
                 cancelAllNotifications();
                 break;
+        }
+    }
+
+    class MyClass extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(FIRST_NOTIF);
+            Log.d("askljdbahksdb", "askhdbsad");
         }
     }
 }
