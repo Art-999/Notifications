@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setContentTitle("Title");
         builder.setContentText("Notification text");
         builder.setNumber(5);//uxaki tiv e avelacnum
+        builder.setTicker("Last China warning");
         builder.setContentInfo("Content info");// text e avelacnum aj koxmic , verjin versanerum verevic e avelacnum
         builder.setColor(rgb(255, 128, 128)); // iconin guyn e avelacnum
         // builder.setWhen(8);//vochte ir default ayl mer koxmic trvac zamn e avelacnum notificationin
@@ -301,24 +302,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setContentInfo("user_mail.com");
         builder.setGroup(GROUP_KEY);
         builder.setGroupSummary(true);
-
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(56, notification);
-        notificationManager.notify(57,notification);
-        notificationManager.notify(58,notification);
-        notificationManager.notify(59,notification);
-        notificationManager.notify(60,notification);
-        notificationManager.notify(61,notification);
-        notificationManager.notify(62,notification);
-        notificationManager.notify(63,notification);
+        notificationManager.notify(57, notification);
+        notificationManager.notify(58, notification);
+        notificationManager.notify(59, notification);
+        notificationManager.notify(60, notification);
+        notificationManager.notify(61, notification);
+        notificationManager.notify(62, notification);
+        notificationManager.notify(63, notification);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.notify_me_button:
-                // createNotification();
+                 createNotification();
                 //createManyNotifications();
                 //createClickableNotification();
                 //createNotificationWithProgressBar();
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // createCustomViewNotification();
                 //createCustomViewNotificationsWithActiveButtons();
                 //createCustomExtendedViewNotification();
-                createGroupOfNotifications();
+                //createGroupOfNotifications();
                 break;
             case R.id.update_notif_button:
                 updateNotification();
